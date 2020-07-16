@@ -10,27 +10,24 @@ function App() {
   const [loading, toggleLoading] = useState(true)
 
   useEffect(()=>[
-    getData()
-  ],[])
-
-  const getData = () => {
-    fetch('/flower')
+    fetch('/api')
       .then(res=>res.json())
       .then(json=>{
         setData(json);
         toggleLoading(false)
       })
+  ],[])
+
+  const getData = () => {
+    
   }
+  const position = [51.505, -0.09]
+
 
   return (
     <div className="App">
       {loading ? "Loading..." :
-        <div>
-          <h1>{data.name}</h1>
-          <p>{data.colour}</p>
-          <img src="./camera.png" />
-          <Map />
-        </div>
+        <Map />
       }
     </div>
   );
