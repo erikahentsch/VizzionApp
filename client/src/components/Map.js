@@ -146,6 +146,7 @@ const MapDiv = (props) => {
     }
 
     const handleMapClick = (e) => {
+        console.log(e)
         if(editSwitch) {
             let newPt = [e.latlng.lat.toFixed(3), e.latlng.lng.toFixed(3)]
             
@@ -231,7 +232,7 @@ const MapDiv = (props) => {
             }
             {props.error && 
                 <div className="spinnerDiv">
-                    <div className="spinnerText">{props.error}</div>
+                    <div className="spinnerText">No Cameras Available</div>
                 </div>
             }
         <div
@@ -251,7 +252,6 @@ const MapDiv = (props) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {props.searchArea.length ===2 && <Rectangle color="purple" bounds={props.searchArea} />}
-                {/* {props.searchArea.length ===2 && <Rectangle color="purple" bounds={props.searchArea} />}
                 {newRectangle.length === 1 && <CircleMarker color="red" opacity={1} radius={2} center={newRectangle[0]}></CircleMarker>}
                 {newRectangle.length === 2 && 
                 <Rectangle onClick={handleRectangleClick} color="red" bounds={newRectangle}>
@@ -259,7 +259,7 @@ const MapDiv = (props) => {
                         <Button onClick={handleUpdate} >Update Search</Button>
                     </Popup>
                 </Rectangle>
-                }*/}
+                }
 
                 {props.cameras && 
                 props.cameras.map(camera=>{

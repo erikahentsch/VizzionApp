@@ -28,18 +28,18 @@ app.get('/api/:pts', getPoints, getData, (req, res) => {
 function getPoints(req,res,next) {
     console.log("getting points", req.params.pts);
     if (!req.params.pts) {
-        console.log('no points')
+        // console.log('no points')
         let defaultPts =  process.env.default.split(',');
         req.params.pts = defaultPts
     } else 
     req.params.pts = req.params.pts.split(',')
-    console.log("getting points", req.params.pts);
+    // console.log("getting points", req.params.pts);
 
     next();
 }
 
 function getData(req,res,next) {
-    console.log("getting Data", req.params.pts[1]);
+    console.log("getting Data", req.params);
 
     let lat1 = req.params.pts[0]
     let lng1 = req.params.pts[1]
@@ -47,36 +47,47 @@ function getData(req,res,next) {
     let lng2 = req.params.pts[3]
 
 
-    console.log(lat1,lng1,lat2,lng2)
+    // console.log(lat1,lng1,lat2,lng2)
 
-    console.log(process.env.API_KEY)
+    // console.log(process.env.API_KEY)
     const url = `http://www.vizzion.com/TrafficCamsService/TrafficCams.asmx/GetCamerasInBox2?dblMinLongitude=${Math.min(lng1,lng2)}&dblMaxLongitude=${Math.max(lng1, lng2)}&dblMinLatitude=${Math.min(lat1, lat2)}&dblMaxLatitude=${Math.max(lat1,lat2)}&strRoadNames=&intOptions=0`
+    // console.log(url)
     fetch(`${url}&strPassword=ZUY%5b%5bBB%5cB3%5bWSVBBIJIQZHU%26IFEO`)
       .then(response=>response.text())
       .then(body=>{
         parser.parseString(body, (err, result)=>{
-            let parsedData = result.DataSet['diffgr:diffgram'][0].DataSetCameras[0].Cameras;
-            let cameraData = []
-            parsedData.map(camera=>{
-                let tempObject = {}
-                tempObject['id'] = camera.CameraID[0];
-                tempObject['name'] = camera.Name[0];
-                tempObject['lat'] = camera.Latitude[0];
-                tempObject['long'] = camera.Longitude[0];
-                if (camera.Hotspot) {
-                    tempObject['hotspot'] = true;
-                } else {
-                    tempObject['hotspot'] = false;
+            console.log(err)
+            console.log("data",result.DataSet['diffgr:diffgram'][0].DataSetCameras)
+            if (result.DataSet['diffgr:diffgram'][0].DataSetCameras) {
+                let parsedData = result.DataSet['diffgr:diffgram'][0].DataSetCameras[0].Cameras;
+
+                let cameraData = []
+                parsedData.map(camera=>{
+                    let tempObject = {}
+                    tempObject['id'] = camera.CameraID[0];
+                    tempObject['name'] = camera.Name[0];
+                    tempObject['lat'] = camera.Latitude[0];
+                    tempObject['long'] = camera.Longitude[0];
+                    if (camera.Hotspot) {
+                        tempObject['hotspot'] = true;
+                    } else {
+                        tempObject['hotspot'] = false;
+                    }
+                    cameraData.push(tempObject)
+                });
+                let dataObject = {
+                    "searchArea": [[lat1,lng1], [lat2,lng2]],
+                    "cameraData": cameraData 
                 }
-                cameraData.push(tempObject)
-            });
-            let dataObject = {
-                "searchArea": [[lat1,lng1], [lat2,lng2]],
-                "cameraData": cameraData 
+                res.send(dataObject);
+            } else {
+                res.status(404);
+                res.send("no data")
             }
-            res.send(dataObject);
-        });
-      });
+
+            
+        })
+      })
 }
 
 
@@ -91,7 +102,7 @@ app.get('/apikey', (req, res)=> {
 })
 
 app.get('/NoImage', (req,res)=> {
-    res.redirect('/NoImage.jpg')
+    res.redirect('http://vizzion.com/img/operator_intervention_a.jpg')
 })
 
 app.get('/flower', (req,res)=>{
