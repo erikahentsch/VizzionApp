@@ -6,6 +6,8 @@ var path = require('path');
 
 var fetch = require('node-fetch');
 
+var request = require('request');
+
 var parser = require('xml2js');
 
 require('dotenv').config();
@@ -67,13 +69,24 @@ function getData(req, res, next) {
 
         cameraData.push(tempObject);
       });
-      res.send(cameraData);
+      var dataObject = {
+        "searchArea": [[lat1, lng1], [lat2, lng2]],
+        "cameraData": cameraData
+      };
+      res.send(dataObject);
     });
   });
 }
 
+app.get("/image/:id", function (req, res) {
+  var imgUrl = "http://www.vizzion.com/TrafficCamsService/TrafficCams.ashx?strRequest=GetCameraImage7&intCameraID=".concat(req.params.id, "&intDesiredWidth=720&intDesiredHeight=480&intDesiredDepth=8&intOptions=0&strPassword=").concat(process.env.API_KEY);
+  request.get(imgUrl).pipe(res);
+});
 app.get('/apikey', function (req, res) {
   res.send(process.env.API_KEY);
+});
+app.get('/NoImage', function (req, res) {
+  res.redirect('/NoImage.jpg');
 });
 app.get('/flower', function (req, res) {
   res.json({
