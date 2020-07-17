@@ -8,27 +8,30 @@ function App() {
 
   const [data, setData] = useState(null)
   const [loading, toggleLoading] = useState(true)
+  const [searchArea, setSearchArea] = useState([])
 
   useEffect(()=>[
     fetch('/api')
       .then(res=>res.json())
       .then(json=>{
-        setData(json);
-        toggleLoading(false)
+        console.log(json)
+        setData(json.cameraData);
+        setSearchArea(json.searchArea);
+        toggleLoading(false);
       })
   ],[])
 
   const getData = () => {
     
   }
-  const position = [51.505, -0.09]
-
 
   return (
     <div className="App">
-      {loading ? "Loading..." :
-        <Map />
-      }
+        <Map 
+          cameras={data}
+          searchArea={searchArea}
+          loading={loading}
+        />
     </div>
   );
 }

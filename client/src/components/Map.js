@@ -112,14 +112,14 @@ var cameraIcon = L.icon({
     iconUrl: `camera.png`,
     // iconSize: [, 32],
     iconAnchor: [16, 16],
-    popupAnchor: [-3, -76],
+    popupAnchor: [-3, -16],
 })
 
 var hotSpotIcon = L.icon({
     iconUrl: `hotspot_camera.png`,
     // iconSize: [50, 50],
     iconAnchor: [16, 16],
-    popupAnchor: [-3, -76],
+    popupAnchor: [-3, -16],
 })
 
 var circle = L.circle({
@@ -213,9 +213,14 @@ const MapDiv = (props) => {
             })
     }
 
+    const handleImageLoad = () => {
+        console.log("load")
+        document.getElementById('imageDiv').style.display = ('inherit')
+    }
+
     return (
         <div className={classes.root}>
-            {/* {props.loading && 
+            {props.loading && 
                 <div className="spinnerDiv">
                     <div className="spinnerText">Loading Cameras</div>
                     <div className="spinner">
@@ -228,7 +233,7 @@ const MapDiv = (props) => {
                 <div className="spinnerDiv">
                     <div className="spinnerText">{props.error}</div>
                 </div>
-            } */}
+            }
         <div
           className={clsx(classes.content, {
             [classes.contentShift]: open,
@@ -245,7 +250,7 @@ const MapDiv = (props) => {
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-
+                {props.searchArea.length ===2 && <Rectangle color="purple" bounds={props.searchArea} />}
                 {/* {props.searchArea.length ===2 && <Rectangle color="purple" bounds={props.searchArea} />}
                 {newRectangle.length === 1 && <CircleMarker color="red" opacity={1} radius={2} center={newRectangle[0]}></CircleMarker>}
                 {newRectangle.length === 2 && 
@@ -254,15 +259,19 @@ const MapDiv = (props) => {
                         <Button onClick={handleUpdate} >Update Search</Button>
                     </Popup>
                 </Rectangle>
-                }
+                }*/}
+
                 {props.cameras && 
                 props.cameras.map(camera=>{
                     return (
                         <Marker key={camera.id} position={[camera.lat, camera.long]} icon={camera.hotspot ? hotSpotIcon: cameraIcon}>
                             <Popup >
                                 <div className={classes.tooltip}>
-                                    <div id="imageDiv">
-                                        <img src={`/image/${camera.id}`}/>
+                                    <div id="imageDiv" style={{display: 'none'}}>
+                                        <img onError={e=>{
+                                            e.target.onError = null;
+                                            e.target.src = '/NoImage'
+                                        }} onLoad={handleImageLoad} src={`/image/${camera.id}`}/>
                                     </div>
                                     <div><strong>ID: </strong>{camera.id}</div>
                                     <div><strong>Name: </strong>{camera.name}</div>
@@ -272,7 +281,8 @@ const MapDiv = (props) => {
                     )
                 })
 
-                } */}
+                } 
+                
                 
             </Map>
             </div>

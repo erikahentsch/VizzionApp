@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const fetch = require('node-fetch')
+const request = require('request')
 const parser = require('xml2js')
 require('dotenv').config();
 
@@ -69,15 +70,28 @@ function getData(req,res,next) {
                 }
                 cameraData.push(tempObject)
             });
-            
-            res.send(cameraData);
+            let dataObject = {
+                "searchArea": [[lat1,lng1], [lat2,lng2]],
+                "cameraData": cameraData 
+            }
+            res.send(dataObject);
         });
       });
-
 }
+
+
+app.get("/image/:id", (req, res)=> {
+    let imgUrl = `http://www.vizzion.com/TrafficCamsService/TrafficCams.ashx?strRequest=GetCameraImage7&intCameraID=${req.params.id}&intDesiredWidth=720&intDesiredHeight=480&intDesiredDepth=8&intOptions=0&strPassword=${process.env.API_KEY}`
+    request.get(imgUrl).pipe(res)
+    
+})
 
 app.get('/apikey', (req, res)=> {
     res.send(process.env.API_KEY)
+})
+
+app.get('/NoImage', (req,res)=> {
+    res.redirect('/NoImage.jpg')
 })
 
 app.get('/flower', (req,res)=>{
