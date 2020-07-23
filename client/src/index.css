@@ -13,6 +13,10 @@ body {
 	z-index: 1;
 }
 
+.leaflet-top {
+	bottom: 0 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

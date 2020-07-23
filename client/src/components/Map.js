@@ -1,22 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
+import Toolbar from './Toolbar'
+
 import { 
     Rectangle,
     Map, 
     Marker, 
     TileLayer, 
     Popup, 
-    Tooltip,
     CircleMarker,
-    MapLayer
 } from 'react-leaflet';
 import clsx from 'clsx';
 import L from 'leaflet'
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-
 
 import {
     Drawer,
@@ -232,7 +231,7 @@ const MapDiv = (props) => {
             }
             {props.error && 
                 <div className="spinnerDiv">
-                    <div className="spinnerText">No Cameras Available</div>
+                    <div className="spinnerText">{props.errorMessage}</div>
                 </div>
             }
         <div
@@ -280,49 +279,18 @@ const MapDiv = (props) => {
                         </Marker>
                     )
                 })
-
                 } 
-                
-                
             </Map>
             </div>
-            <Drawer
-                className={classes.drawer}
-                variant="persistent"
-                anchor="right"
+            <Toolbar 
                 open={open}
-                classes={{
-                    paper: classes.drawerPaper,
-                  }}
-                >
-                <div className={classes.drawerTitle}>Toolbar</div>
-                <div className={classes.drawerBody}>
-                    <FormControl margin={"normal"}>
-                        <FormLabel>Change Search Area</FormLabel>
-                        <FormControlLabel
-                            label="Toggle Area Edit"
-                            control={
-                                <Switch
-                                checked={editSwitch}
-                                onChange={handleSwitch}
-                                name="checkedA"
-                                inputProps={{ 'aria-label': 'secondary checkbox' }}
-                            />
-                            }
-                        />
-                        <FormHelperText>Select two points to create new search rectangle</FormHelperText>    
-                        <FormGroup className={classes.buttonGroup} row>
-                            <Button onClick={handleUpdate} variant="contained" color="primary">Update</Button>
-                            <Button onClick={handleClear} variant="contained">Clear</Button>
-
-                        </FormGroup>                
-                        <FormGroup>
-                            <Button variant="contained" color="secondary" onClick={downloadContent}>Export</Button>
-
-                        </FormGroup>
-                    </FormControl>
-                </div>
-            </Drawer>
+                editSwitch={editSwitch}
+                handleSwitch={handleSwitch}
+                handleUpdate={handleUpdate}
+                handleClear={handleClear}
+                downloadContent={downloadContent}
+                regionData={props.regionData}
+                />
         </div>
     )
 }
