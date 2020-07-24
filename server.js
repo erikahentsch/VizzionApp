@@ -3,6 +3,9 @@ const path = require('path')
 const fetch = require('node-fetch')
 const request = require('request')
 const parser = require('xml2js')
+require('babel-polyfill');
+
+
 require('dotenv').config();
 
 const PORT = process.env.HTTP_PORT || 4001;

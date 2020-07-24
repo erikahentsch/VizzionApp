@@ -13,8 +13,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import Menu from './Menu'
-import RegionSelect from './RegionSelect'
+import SelectRegion from './NavItem'
 
 const drawerWidth = 240;
 
@@ -22,6 +21,7 @@ const drawerWidth = 240;
 const styles = makeStyles((theme)=>({
     root: {
         display: 'flex',
+          fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
       },
       drawer: {
         width: drawerWidth,
@@ -36,7 +36,8 @@ const styles = makeStyles((theme)=>({
       drawerTitle: {
           fontSize: '24px',
           fontWeight: 'bold',
-          padding: '10px'
+          padding: '10px',
+          fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
       },
       drawerBody: {
           padding: '0px 10px'
@@ -90,6 +91,7 @@ const styles = makeStyles((theme)=>({
 const Toolbar = (props) => {
 
     const classes = styles();
+    
     return (             
     <Drawer
     className={classes.drawer}
@@ -116,9 +118,7 @@ const Toolbar = (props) => {
                     }
                 />
                 <FormHelperText>Select two points to create new search rectangle</FormHelperText>    
-                {/* <FormGroup >
-                    <RegionSelect regionData={props.regionData} />
-                </FormGroup> */}
+                
                 <FormGroup className={classes.buttonGroup} row>
                     <Button onClick={props.handleUpdate} variant="contained" color="primary">Update</Button>
                     <Button onClick={props.handleClear} variant="contained">Clear</Button>
@@ -127,6 +127,9 @@ const Toolbar = (props) => {
                 <FormGroup>
                     <Button variant="contained" color="secondary" onClick={props.downloadContent}>Export</Button>
 
+                </FormGroup>
+                <FormGroup style={{paddingTop: 20}}>
+                    <SelectRegion handleRegionSelect={props.handleRegionSelect} regions={props.regionData} />
                 </FormGroup>
             </FormControl>
         </div>

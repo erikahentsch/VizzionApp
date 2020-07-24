@@ -33,6 +33,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
+      height: '100%',
     },
     drawer: {
       width: drawerWidth,
@@ -217,6 +218,12 @@ const MapDiv = (props) => {
         console.log("load")
         document.getElementById('imageDiv').style.display = ('inherit')
     }
+    const handleRegionSelect = (region) => {
+        console.log("region selected in MAp!", region)
+        setPosition({lat: region.center[0], long: region.center[1], zoom: 10})
+        setNewRectangle([region.pt1, region.pt2])
+        props.handleNewRectangle([region.pt1, region.pt2])
+    }
 
     return (
         <div className={classes.root}>
@@ -244,7 +251,7 @@ const MapDiv = (props) => {
                   {!open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
           </div>
-            <Map  onClick={handleMapClick} height={100}  center={[position.lat, position.long]} zoom={position.zoom}>
+            <Map style={{cursor: editSwitch && 'pointer'}} onClick={handleMapClick} center={[position.lat, position.long]} zoom={position.zoom}>
                 <TileLayer
                 style={{cursor: editSwitch && "pointer !important" }}
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -290,6 +297,8 @@ const MapDiv = (props) => {
                 handleClear={handleClear}
                 downloadContent={downloadContent}
                 regionData={props.regionData}
+                handleRegionSelect={handleRegionSelect}
+
                 />
         </div>
     )

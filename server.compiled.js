@@ -14,6 +14,8 @@ var request = require('request');
 
 var parser = require('xml2js');
 
+require('babel-polyfill');
+
 require('dotenv').config();
 
 var PORT = process.env.HTTP_PORT || 4001;
